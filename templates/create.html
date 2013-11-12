@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <meta name="viewport" content="width=device-width">
+        <title>Shortner</title>
+        <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/css/bootstrap.min.css">
+        <style>
+            body { margin: 20px 0 0; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <form role="form" action="/create" method="get">
+                <div class="input-group">
+                    <input type="url" class="form-control" id="url" name="url" placeholder="Enter URL" required />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">Shorten!</button>
+                    </span>
+                </div>
+            </form>
+            {% if short_url %}
+            <h4>
+                <a href="http://{{ short_url }}">{{ short_url }}</a>
+            </h4>
+            {% endif %}
+        </div>
+    </body>
+</html>
