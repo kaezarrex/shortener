@@ -1,3 +1,3 @@
-# shortner
+# shortener
 
-A simple URL shortner. Try it out at [http://s.dhaz.in/](http://s.dhaz.in/).
+A simple URL shortener. Try it out at [http://s.dhaz.in/](http://s.dhaz.in/).
