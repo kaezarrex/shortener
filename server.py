@@ -10,7 +10,7 @@ MONGO_URL = os.environ.get('MONGOHQ_URL', 'mongodb://127.0.0.1:27017/shortener')
 conn = MongoClient(MONGO_URL)
 db = conn[MONGO_URL.split('/')[-1]]
 
-SERVER_URL = os.environ.get('SERVER_URL', '127.0.0.1:5000')
+SERVER_URL = os.environ.get('SERVER_URL', 'http://127.0.0.1:5000/')
 app = Flask(__name__)
 
 
@@ -34,11 +34,15 @@ def base_61(num, power=6, result=''):
     return base_61(num % pow(61, power), power - 1, result = result + c)
 
 
+def path_to_url(path):
+    return '%s%s' % (SERVER_URL, path)
+
+
 def shorten_url(url):
     m = hashlib.md5()
     m.update(url)
     path = base_61(int(m.hexdigest(), 16))
-    return (path, '%s/%s' % (SERVER_URL, path))
+    return (path, path_to_url(path))
 
 
 @app.route("/")
@@ -85,8 +89,8 @@ def stats_handler(path):
 
     num_hits = len(link['hits'])
 
-    return render_template('stats.html', path=path, num_hits=num_hits,
-                           url=link['url'])
+    return render_template('stats.html', short_url=path_to_url(path),
+                           url=link['url'], num_hits=num_hits)
 
 
 if __name__ == "__main__":
