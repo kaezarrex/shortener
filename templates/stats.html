@@ -1,5 +1,25 @@
 {% extends 'base.html' %}
 
+{% block js %}
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js"></script>
+    <script>
+        var ctx = document.getElementById("hitsChart").getContext("2d");
+
+        var data = {
+            labels : {{ day_labels|safe }},
+            datasets : [
+                {
+                    fillColor : "rgba(151,187,205,0.5)",
+                    strokeColor : "rgba(151,187,205,1)",
+                    data : {{ day_data }}
+                }
+            ]
+        };
+
+        new Chart(ctx).Bar(data);
+    </script>
+{% endblock %}
+
 {% block container %}
 <p>
     <a href="{{ short_url }}" target="_blank">{{ short_url }}</a> has {{ num_hits }} hit{% if num_hits != 1 %}s{% endif %}.
@@ -7,6 +27,7 @@
 <p>
     It points to <a href="{{ url }}" target="_blank">{{ url }}</a>.
 </p>
+<canvas id="hitsChart"></canvas>
 <p>
     <i>More info coming soon.</i>
 </p>

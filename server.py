@@ -1,3 +1,4 @@
+import collections
 import datetime
 import hashlib
 import os
@@ -89,8 +90,21 @@ def stats_handler(path):
 
     num_hits = len(link['hits'])
 
+    dates = (hit['timestamp'].date() for hit in link['hits'])
+    date_counter = collections.Counter(dates)
+    current_date = min(date_counter)
+
+    day_labels = list()
+    day_data = list()
+
+    while current_date <= max(date_counter):
+        day_labels.append(str(current_date))
+        day_data.append(date_counter[current_date])
+        current_date += datetime.timedelta(days=1)
+
     return render_template('stats.html', short_url=path_to_url(path),
-                           url=link['url'], num_hits=num_hits)
+                           url=link['url'], num_hits=num_hits,
+                           day_labels=day_labels, day_data=day_data)
 
 
 if __name__ == "__main__":
