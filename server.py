@@ -43,11 +43,6 @@ def shorten_url(url):
 
 @app.route("/")
 def index_handler():
-    return redirect(url_for('create_handler'))
-
-
-@app.route("/create")
-def create_handler():
     url = request.args.get('url')
     short_url = None
 
@@ -57,7 +52,7 @@ def create_handler():
         if db.links.find_one({'_id': path}) is None:
             db.links.save({'_id': path, 'url': url, 'hits': []})
 
-    return render_template('create.html', url=url, short_url=short_url)
+    return render_template('index.html', url=url, short_url=short_url)
 
 
 @app.route("/<path>")
