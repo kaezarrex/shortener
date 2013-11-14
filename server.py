@@ -1,3 +1,4 @@
+import datetime
 import hashlib
 import os
 
@@ -52,19 +53,46 @@ def create_handler():
 
     if url is not None:
         path, short_url = shorten_url(url)
-        db.links.save({'_id': path, 'url': url})
 
-    return render_template('create.html', short_url=short_url)
+        if db.links.find_one({'_id': path}) is None:
+            db.links.save({'_id': path, 'url': url, 'hits': []})
+
+    return render_template('create.html', url=url, short_url=short_url)
 
 
 @app.route("/<path>")
-def short_handler(path):
-    result = db.links.find_one({'_id': path})
+def link_handler(path):
+    link = db.links.find_one({'_id': path});
 
-    if result is None:
+    if link is None:
         return abort(404)
 
-    return redirect(result['url'], 301)
+    link['hits'].append({
+        'timestamp': datetime.datetime.now(),
+        'host': request.host,
+        'referrer': request.referrer,
+        'browser': request.user_agent.browser,
+        'language': request.user_agent.language,
+        'platform': request.user_agent.platform,
+        'version': request.user_agent.version
+        })
+    db.links.save(link)
+
+    return redirect(link['url'], 301)
+
+
+@app.route("/<path>+")
+def stats_handler(path):
+    link = db.links.find_one({'_id': path});
+
+    if link is None:
+        return abort(404)
+
+    num_hits = len(link['hits'])
+
+    return render_template('stats.html', path=path, num_hits=num_hits,
+                           url=link['url'])
+
 
 if __name__ == "__main__":
     app.debug = True

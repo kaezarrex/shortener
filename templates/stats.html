@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<p>
+    <a href="{{ path }}">{{ path }}</a> has {{ num_hits }} hit{% if num_hits != 1 %}s{% endif %}.
+</p>
+<p>
+    It points to <a href="{{ url }}">{{ url }}</a>.
+</p>
+<p>
+    <i>More info coming soon.</i>
+</p>
+{% endblock %}
