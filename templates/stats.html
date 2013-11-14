@@ -2,10 +2,10 @@
 
 {% block container %}
 <p>
-    <a href="{{ path }}">{{ path }}</a> has {{ num_hits }} hit{% if num_hits != 1 %}s{% endif %}.
+    <a href="{{ path }}" target="_blank">{{ path }}</a> has {{ num_hits }} hit{% if num_hits != 1 %}s{% endif %}.
 </p>
 <p>
-    It points to <a href="{{ url }}">{{ url }}</a>.
+    It points to <a href="{{ url }}" target="_blank">{{ url }}</a>.
 </p>
 <p>
     <i>More info coming soon.</i>
