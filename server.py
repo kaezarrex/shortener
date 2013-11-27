@@ -82,19 +82,20 @@ def stats_handler(path):
     if link is None:
         return abort(404)
 
-    num_hits = len(hits)
-
-    dates = (hit['timestamp'].date() for hit in hits)
-    date_counter = collections.Counter(dates)
-    current_date = min(date_counter)
-
     day_labels = list()
     day_data = list()
+    num_hits = len(hits)
 
-    while current_date <= max(date_counter):
-        day_labels.append(str(current_date))
-        day_data.append(date_counter[current_date])
-        current_date += datetime.timedelta(days=1)
+    if num_hits:
+
+        dates = (hit['timestamp'].date() for hit in hits)
+        date_counter = collections.Counter(dates)
+        current_date = min(date_counter)
+
+        while current_date <= max(date_counter):
+            day_labels.append(str(current_date))
+            day_data.append(date_counter[current_date])
+            current_date += datetime.timedelta(days=1)
 
     return render_template('stats.html', short_url=path_to_url(path),
                            url=link['url'], num_hits=num_hits,
