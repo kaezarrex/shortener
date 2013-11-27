@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+import os
+from urlparse import urlparse
+
+import psycopg2
+
+url = urlparse(os.getenv('DATABASE_URL'))
+conn = psycopg2.connect(
+    database=url.path[1:],
+    user=url.username,
+    password=url.password,
+    host=url.hostname,
+    port=url.port
+)
+cur = conn.cursor()
+
+cur.execute("""
+CREATE TABLE links (
+    path char(6) primary key,
+    url varchar,
+    created_at timestamp
+);
+""")
+
+cur.execute("""
+CREATE TABLE hits (
+    path char(6) references links(path),
+    timestamp timestamp,
+    referrer varchar,
+    browser varchar,
+    platform varchar,
+    version varchar
+);
+""")
+
+conn.commit()
+
+cur.close()
+conn.close()
